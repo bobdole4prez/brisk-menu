@@ -18,6 +18,7 @@ BRISK_BEGIN_PEDANTIC
 #include "applet.h"
 #include "brisk-resources.h"
 #include <glib/gi18n.h>
+#include <gmodule.h>
 #include <libnotify/notify.h>
 #include <mate-panel-applet.h>
 BRISK_END_PEDANTIC
@@ -79,14 +80,19 @@ static gboolean brisk_menu_applet_factory(MatePanelApplet *applet, const gchar *
         if (!g_str_has_prefix(id, "BriskMenu")) {
                 return FALSE;
         }
+        autofree(GtkActionGroup) *group = NULL;
+
+#ifndef BRISK_IN_PROCESS
+        /* Only safe in our own process: in-process we'd change mate-panel's
+         * working directory and application name. */
         const char *home = NULL;
         __attribute__((unused)) int ret = 0;
-        autofree(GtkActionGroup) *group = NULL;
 
         home = g_get_home_dir();
         if (home) {
                 ret = chdir(home);
         }
+#endif
 
         if (!notify_had_init) {
                 notify_init(_("Brisk Menu Launcher"));
@@ -101,13 +107,21 @@ static gboolean brisk_menu_applet_factory(MatePanelApplet *applet, const gchar *
         mate_panel_applet_setup_menu(applet, BRISK_MENU_XML, group);
         G_GNUC_END_IGNORE_DEPRECATIONS
 
+#ifndef BRISK_IN_PROCESS
         g_set_application_name(_("Brisk Menu Launcher"));
+#endif
         gtk_widget_show(GTK_WIDGET(applet));
         return TRUE;
 }
 
+#ifdef BRISK_IN_PROCESS
+/* Loaded into mate-panel: required for Wayland, also works on X11 */
+MATE_PANEL_APPLET_IN_PROCESS_FACTORY("BriskMenuFactory", BRISK_TYPE_MENU_APPLET, "BriskMenu",
+                                     brisk_menu_applet_factory, NULL)
+#else
 MATE_PANEL_APPLET_OUT_PROCESS_FACTORY("BriskMenuFactory", BRISK_TYPE_MENU_APPLET, "BriskMenu",
                                       brisk_menu_applet_factory, NULL)
+#endif
 
 /*
  * Editor modelines  -  https://www.wireshark.org/tools/modelines.html

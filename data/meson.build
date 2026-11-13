@@ -42,6 +42,18 @@ install_data(
 # Prepare to configure our files.
 data_conf = configuration_data()
 data_conf.set('LIBEXECDIR', path_libexecdir)
+if with_in_process
+    data_conf.set('IN_PROCESS', 'true')
+    data_conf.set('LOCATION', join_paths(path_appletlibdir, 'libbrisk-menu-applet.so'))
+else
+    data_conf.set('IN_PROCESS', 'false')
+    data_conf.set('LOCATION', join_paths(path_libexecdir, 'brisk-menu'))
+endif
+if with_wayland
+    data_conf.set('PLATFORMS', 'X11;Wayland;')
+else
+    data_conf.set('PLATFORMS', 'X11;')
+endif
 
 # Write applet configuration
 appletdir = join_paths(path_datadir, 'mate-panel', 'applets')
@@ -53,12 +65,21 @@ configure_file(
 )
 
 # Write d-bus activation unit for standalone Brisk Menu
-servicedir = join_paths(path_datadir, 'dbus-1', 'services')
-configure_file(
-    input: 'org.mate.panel.applet.BriskMenuFactory.service.in',
-    output: 'org.mate.panel.applet.BriskMenuFactory.service',
-    configuration: data_conf,
-    install_dir: servicedir,
+if not with_in_process
+    servicedir = join_paths(path_datadir, 'dbus-1', 'services')
+    configure_file(
+        input: 'org.mate.panel.applet.BriskMenuFactory.service.in',
+        output: 'org.mate.panel.applet.BriskMenuFactory.service',
+        configuration: data_conf,
+        install_dir: servicedir,
+    )
+endif
+
+# Helper to toggle the menu over D-Bus; bind it to a key in Wayland compositors
+install_data(
+    'brisk-menu-toggle',
+    install_dir: path_bindir,
+    install_mode: 'rwxr-xr-x',
 )
 
 # Install gschemas

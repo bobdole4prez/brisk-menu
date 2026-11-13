@@ -11,6 +11,7 @@ libfrontend_sources = [
     'menu-settings.c',
     'menu-sort.c',
     'menu-window.c',
+    'menu-wayland.c',
     'classic/category-button.c',
     'classic/classic-entry-button.c',
     'classic/classic-window.c',
@@ -27,6 +28,10 @@ libfrontend_dependencies = [
     link_libutil,
     dep_gtk3,
 ]
+
+if with_wayland
+    libfrontend_dependencies += dep_layer_shell
+endif
 
 libfrontend_includes = [
     include_directories('.'),

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Open or close the Brisk Menu applet running in mate-panel.
+#
+# Under Wayland, applications can't grab global keys, so bind this command
+# to Super (or any key) in your compositor. For Wayfire, in wayfire.ini:
+#
+#   [command]
+#   binding_brisk = <super>
+#   command_brisk = brisk-menu-toggle
+exec gdbus call --session \
+        --dest com.solus_project.brisk.Menu \
+        --object-path /com/solus_project/brisk/Menu \
+        --method com.solus_project.brisk.Menu.Toggle >/dev/null

@@ -87,6 +87,11 @@ static void brisk_classic_window_update_screen_position(BriskMenuWindow *self)
                 return;
         }
 
+        /* Wayland: anchored with layer-shell instead of gtk_window_move */
+        if (brisk_menu_window_wayland_place(self, FALSE)) {
+                return;
+        }
+
         /* Forcibly realize the applet window */
         if (!gtk_widget_get_realized(self->relative_to)) {
                 gtk_widget_realize(self->relative_to);
@@ -499,7 +504,7 @@ BriskMenuWindow *brisk_classic_window_new(GtkWidget *relative_to)
 {
         return g_object_new(BRISK_TYPE_CLASSIC_WINDOW,
                             "type",
-                            GTK_WINDOW_POPUP,
+                            brisk_menu_window_get_window_type(),
                             "relative-to",
                             relative_to,
                             NULL);

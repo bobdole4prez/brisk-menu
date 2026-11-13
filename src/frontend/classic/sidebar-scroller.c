@@ -83,12 +83,14 @@ static void brisk_menu_sidebar_scroller_get_preferred_height(GtkWidget *widget, 
         GtkBorder margin;
         gint spacing;
         GdkRectangle geom = { 0 };
-        gint applet_x, applet_y = 0;
+        gint applet_x = 0, applet_y = 0;
         gint mon = 0;
 
-        /* Find out where we are on screen */
+        /* Find out where we are on screen (not possible before realize) */
         window = gtk_widget_get_window(widget);
-        gdk_window_get_origin(window, &applet_x, &applet_y);
+        if (window) {
+                gdk_window_get_origin(window, &applet_x, &applet_y);
+        }
 
         /* Grab the geometry for the monitor we're currently on */
         screen = gtk_widget_get_screen(widget);

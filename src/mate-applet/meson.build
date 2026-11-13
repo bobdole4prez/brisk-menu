@@ -11,13 +11,27 @@ mate_applet_dependencies = [
     dep_notify,
 ]
 
-mate_applet = executable(
-    'brisk-menu',
-    sources: mate_applet_sources,
-    dependencies: mate_applet_dependencies,
-    include_directories: [
-        config_h_dir,
-    ],
-    install_dir: path_libexecdir,
-    install: true,
-)
+if with_in_process
+    # Loaded by mate-panel itself (libbrisk-menu-applet.so)
+    mate_applet = shared_module(
+        'brisk-menu-applet',
+        sources: mate_applet_sources,
+        dependencies: mate_applet_dependencies,
+        include_directories: [
+            config_h_dir,
+        ],
+        install_dir: path_appletlibdir,
+        install: true,
+    )
+else
+    mate_applet = executable(
+        'brisk-menu',
+        sources: mate_applet_sources,
+        dependencies: mate_applet_dependencies,
+        include_directories: [
+            config_h_dir,
+        ],
+        install_dir: path_libexecdir,
+        install: true,
+    )
+endif

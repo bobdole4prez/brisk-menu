@@ -63,6 +63,13 @@ static gboolean brisk_menu_window_map(GtkWidget *widget, __brisk_unused__ gpoint
 
         self = BRISK_MENU_WINDOW(widget);
 
+        /* Wayland: keyboard focus comes from the layer-shell surface itself */
+        if (brisk_menu_window_is_wayland()) {
+                gtk_widget_grab_focus(self->search);
+                brisk_menu_window_grab(self);
+                return GDK_EVENT_STOP;
+        }
+
         /* Forcibly request focus */
         window = gtk_widget_get_window(widget);
         gdk_window_set_accept_focus(window, TRUE);
@@ -155,6 +162,15 @@ static void brisk_menu_window_grab(BriskMenuWindow *self)
                 return;
         }
 
+        /* Wayland has no client-side seat grabs. Keep an in-process GTK grab
+         * so clicks on the panel or the dismiss surface reach our
+         * button-press handler and close the menu, as they do under X11. */
+        if (brisk_menu_window_is_wayland()) {
+                self->grabbed = TRUE;
+                gtk_grab_add(GTK_WIDGET(self));
+                return;
+        }
+
         window = gtk_widget_get_window(GTK_WIDGET(self));
         if (!window) {
                 g_warning("Attempting to grab BriskMenuWindow when not realized");
@@ -220,6 +236,12 @@ static void brisk_menu_window_ungrab(BriskMenuWindow *self)
                 return;
         }
 
+        if (brisk_menu_window_is_wayland()) {
+                gtk_grab_remove(GTK_WIDGET(self));
+                self->grabbed = FALSE;
+                return;
+        }
+
         display = gtk_widget_get_display(GTK_WIDGET(self));
         seat = gdk_display_get_default_seat(display);
 
@@ -276,6 +298,19 @@ static gboolean brisk_menu_window_button_press(GtkWidget *widget, GdkEvent *even
 {
         gint wx, wy = 0;
         gint ww, wh = 0;
+
+        /* Wayland has no global coordinates: the press is outside the menu
+         * when it arrived on another surface (panel or dismiss surface). */
+        if (brisk_menu_window_is_wayland()) {
+                GdkWindow *ours = gtk_widget_get_window(widget);
+                GdkWindow *target = event->button.window;
+
+                if (ours && target && gdk_window_get_toplevel(target) != ours) {
+                        gtk_widget_hide(widget);
+                        return GDK_EVENT_STOP;
+                }
+                return GDK_EVENT_PROPAGATE;
+        }
 
         gtk_window_get_size(GTK_WINDOW(widget), &ww, &wh);
         gtk_window_get_position(GTK_WINDOW(widget), &wx, &wy);

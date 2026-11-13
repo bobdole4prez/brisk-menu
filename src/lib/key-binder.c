@@ -126,6 +126,12 @@ static void brisk_key_binder_init(BriskKeyBinder *self)
         self->bindings =
             g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)free_keybinding);
 
+        /* Global key grabs only exist on X11; on Wayland the compositor binds
+         * the hotkey (to brisk-menu-toggle) and brisk_key_binder_bind() fails. */
+        if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+                return;
+        }
+
         root = gdk_get_default_root_window();
         if (!root) {
                 g_warning("No root window found, cannot bind events");
@@ -310,7 +316,7 @@ gboolean brisk_key_binder_bind(BriskKeyBinder *self, const gchar *shortcut, Bind
         KeyCode key;
         KeyBinding *bind = NULL;
 
-        if (g_hash_table_contains(self->bindings, shortcut)) {
+        if (!self->root_window || g_hash_table_contains(self->bindings, shortcut)) {
                 return FALSE;
         }
 

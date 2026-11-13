@@ -1,0 +1,4 @@
+option('in-process', type: 'boolean', value: true,
+       description: 'Build the applet as a module loaded into mate-panel (required for Wayland)')
+option('wayland', type: 'feature', value: 'auto',
+       description: 'Wayland support via gtk-layer-shell (requires in-process)')

@@ -80,6 +80,11 @@ static void brisk_dash_window_update_screen_position(BriskMenuWindow *self)
                 return;
         }
 
+        /* Wayland: fill the usable area of the panel's monitor */
+        if (brisk_menu_window_wayland_place(self, TRUE)) {
+                return;
+        }
+
         /* Forcibly realize the applet window */
         if (!gtk_widget_get_realized(self->relative_to)) {
                 gtk_widget_realize(self->relative_to);
@@ -467,7 +472,7 @@ BriskMenuWindow *brisk_dash_window_new(GtkWidget *relative_to)
 {
         return g_object_new(BRISK_TYPE_DASH_WINDOW,
                             "type",
-                            GTK_WINDOW_POPUP,
+                            brisk_menu_window_get_window_type(),
                             "relative-to",
                             relative_to,
                             NULL);

@@ -105,6 +105,9 @@ struct _BriskMenuWindow {
         /* Session management */
         GnomeSessionManager *session;
         MateScreenSaver *saver;
+
+        /* Wayland only: transparent surface that dismisses the menu on click */
+        GtkWidget *wl_catcher;
 };
 
 GtkWidget *brisk_menu_window_get_section_box(BriskMenuWindow *self, BriskBackend *backend);
@@ -131,6 +134,15 @@ void brisk_menu_window_update_hotkey(BriskMenuWindow *self, gchar *key);
 
 /* Global grabs */
 void brisk_menu_window_configure_grabs(BriskMenuWindow *self);
+
+/* D-Bus toggle, used as the hotkey under Wayland (brisk-menu-toggle) */
+void brisk_menu_window_export_toggle(void);
+
+/* Wayland (layer-shell) support, no-ops under X11 */
+gboolean brisk_menu_window_is_wayland(void);
+GtkWindowType brisk_menu_window_get_window_type(void);
+void brisk_menu_window_wayland_setup(BriskMenuWindow *self);
+gboolean brisk_menu_window_wayland_place(BriskMenuWindow *self, gboolean fill);
 
 /* Session controls */
 void brisk_menu_window_logout(BriskMenuWindow *self, gpointer v);

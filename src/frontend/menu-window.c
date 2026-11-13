@@ -52,8 +52,25 @@ static void brisk_menu_window_dispose(GObject *obj)
         g_clear_pointer(&self->backends, g_hash_table_unref);
         g_clear_pointer(&self->context_menu, gtk_widget_destroy);
         g_clear_object(&self->context_group);
+        g_clear_pointer(&self->wl_catcher, gtk_widget_destroy);
+
+        if (BriskMenuWindowInstance == self) {
+                BriskMenuWindowInstance = NULL;
+        }
 
         G_OBJECT_CLASS(brisk_menu_window_parent_class)->dispose(obj);
+}
+
+/**
+ * brisk_menu_window_constructed:
+ *
+ * The window type is only known once construct properties are set, so the
+ * layer-shell setup (which must happen before realize) lives here.
+ */
+static void brisk_menu_window_constructed(GObject *obj)
+{
+        G_OBJECT_CLASS(brisk_menu_window_parent_class)->constructed(obj);
+        brisk_menu_window_wayland_setup(BRISK_MENU_WINDOW(obj));
 }
 
 /**
@@ -67,6 +84,7 @@ static void brisk_menu_window_class_init(BriskMenuWindowClass *klazz)
 
         /* gobject vtable hookup */
         obj_class->dispose = brisk_menu_window_dispose;
+        obj_class->constructed = brisk_menu_window_constructed;
         obj_class->set_property = brisk_menu_window_set_property;
         obj_class->get_property = brisk_menu_window_get_property;
 
@@ -101,6 +119,9 @@ static void brisk_menu_window_init(BriskMenuWindow *self)
 
         brisk_menu_window_init_settings(self);
         BriskMenuWindowInstance = self;
+
+        /* Once per process: lets brisk-menu-toggle open the menu */
+        brisk_menu_window_export_toggle();
 }
 
 static void brisk_menu_window_set_property(GObject *object, guint id, const GValue *value,

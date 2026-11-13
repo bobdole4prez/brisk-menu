@@ -1,6 +1,7 @@
 [Applet Factory]
 Id=BriskMenuFactory
-Location=@LIBEXECDIR@/brisk-menu
+InProcess=@IN_PROCESS@
+Location=@LOCATION@
 Name=Brisk Menu Factory
 Description=Brisk Menu Factory
 
@@ -8,3 +9,4 @@ Description=Brisk Menu Factory
 Name=Brisk Menu
 Description=An efficient menu for the MATE desktop
 Icon=start-here
+Platforms=@PLATFORMS@

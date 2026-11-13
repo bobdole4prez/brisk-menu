@@ -68,6 +68,26 @@ dep_mate_menu = dependency('libmate-menu', version: mate_min_version)
 # Misc
 dep_notify = dependency('libnotify', version: '>= 0.7.0')
 
+# Applet type: in-process (a module loaded by mate-panel) or a standalone
+# D-Bus activated binary. mate-panel only supports the latter on X11.
+with_in_process = get_option('in-process')
+
+if get_option('wayland').enabled() and not with_in_process
+    error('Wayland support requires -Din-process=true')
+endif
+
+# Wayland support (layer-shell menu windows)
+dep_layer_shell = dependency('gtk-layer-shell-0', version: '>= 0.6.0',
+                             required: get_option('wayland'))
+with_wayland = with_in_process and dep_layer_shell.found()
+
+if with_in_process
+    add_global_arguments('-DBRISK_IN_PROCESS=1', language: 'c')
+endif
+if with_wayland
+    add_global_arguments('-DBRISK_WAYLAND=1', language: 'c')
+endif
+
 # Get configuration bits together
 path_prefix = get_option('prefix')
 path_sysconfdir = join_paths(path_prefix, get_option('sysconfdir'))
@@ -96,11 +116,14 @@ config_h = configure_file(
 )
 config_h_dir = include_directories('.')
 
-# We're going to allow controlling this as either building a .so variant of
-# Brisk Menu, or as a standalone binary
-#
-# For now just limit to stand-alone..
-with_applet_type = 'stand-alone'
+# The applet is either a .so loaded by mate-panel, or a standalone binary
+path_libdir = join_paths(path_prefix, get_option('libdir'))
+path_appletlibdir = join_paths(path_libdir, 'mate-panel')
+if with_in_process
+    with_applet_type = 'in-process'
+else
+    with_applet_type = 'stand-alone'
+endif
 
 # Handle data before anything else
 subdir('data')
@@ -125,6 +148,7 @@ report = [
     '    ============',
     '',
     '    applet type:                            @0@'.format(with_applet_type),
+    '    wayland support:                        @0@'.format(with_wayland),
 ]
 
 # Output some stuff to validate the build config
