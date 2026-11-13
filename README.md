@@ -1,3 +1,47 @@
+brisk-menu (Wayland fork)
+=========================
+
+> [!IMPORTANT]
+> **This fork is not actively developed.** It exists to share a working Wayland build of Brisk Menu for anyone who wants it. Upstream ([getsolus/brisk-menu](https://github.com/getsolus/brisk-menu)) was archived in 2025. Issues are open so people can share problems and fixes, but there's no promise of a reply, a fix or new releases. Pull requests may not be reviewed or merged.
+
+This fork adds Wayland support to Brisk Menu for MATE 1.27 and later (mate-panel's Wayland session, e.g. mate-wayland-session with Wayfire). It runs unchanged in an X11 session too.
+
+Download a Debian 13 (trixie) package from the [Releases](https://github.com/bobdole4prez/brisk-menu/releases) page.
+
+### What's different from upstream
+
+- The applet is built **in-process** (a module mate-panel loads) instead of as a separate program. mate-panel only supports separate-program applets on X11, which is why upstream Brisk shows nothing under Wayland.
+- Under Wayland the menu is a **layer-shell** surface (gtk-layer-shell) anchored to the panel edge; clicking outside it or pressing Escape closes it.
+- Wayland doesn't let applications grab global keys, so the Super key is bound in the compositor instead, to the new `brisk-menu-toggle` command. For Wayfire, in `wayfire.ini`:
+
+  ```
+  [command]
+  binding_brisk = <super>
+  command_brisk = brisk-menu-toggle
+  ```
+
+- Build options: `-Din-process=true|false` (default true; false restores the X11-only upstream behaviour) and `-Dwayland=auto|enabled|disabled` (needs in-process and `gtk-layer-shell-0` >= 0.6).
+
+### Known limitations
+
+- Under Wayland, the **Lock, Log Out and Shut Down buttons do nothing**: they use the MATE screensaver and session services, which aren't available in the Wayland session (mate-panel's own menu has the same problem, [mate-panel#1432](https://github.com/mate-desktop/mate-panel/issues/1432)).
+- Menu placement assumes the panel starts at the edge of the monitor (true for normal full-length panels).
+- Because the applet runs inside mate-panel, a crash in Brisk takes the panel down with it.
+- Tested on Debian 13 with MATE 1.28 under Wayfire, and in an X11 session.
+
+### Building the Debian package
+
+```bash
+sudo apt build-dep ./      # or install the Build-Depends in debian/control
+dpkg-buildpackage -us -uc -b
+```
+
+Or with meson directly, as below.
+
+---
+
+The upstream README follows.
+
 brisk-menu
 ==========
 
