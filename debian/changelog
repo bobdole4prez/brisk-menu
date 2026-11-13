@@ -8,6 +8,8 @@ brisk-menu (0.6.2+wayland1-1) unstable; urgency=medium
     with gtk-layer-shell, and add brisk-menu-toggle (D-Bus) for binding the
     hotkey in the compositor.
   * Drop debian/patches: all fixes are in the source tree.
+  * Include Andrew Sayers' fix for the g_source_remove() call in the
+    apps backend (from his fork, never merged upstream).
   * Build-Depend on libgtk-layer-shell-dev; Depend on libglib2.0-bin (gdbus)
     and mate-panel (>= 1.27.0).
   * Point Maintainer, Homepage, Vcs-* and debian/upstream/metadata at the
