@@ -1,0 +1,267 @@
+brisk-menu (0.6.2+wayland1-1) unstable; urgency=medium
+
+  * Unofficial build from https://github.com/bobdole4prez/brisk-menu, based
+    on upstream git master (0.6.2 plus later fixes and the configurable
+    panel icon).
+  * Add Wayland support: build the applet in-process
+    (/usr/lib/<triplet>/mate-panel/libbrisk-menu-applet.so), place the menu
+    with gtk-layer-shell, and add brisk-menu-toggle (D-Bus) for binding the
+    hotkey in the compositor.
+  * Drop debian/patches: all fixes are in the source tree.
+  * Build-Depend on libgtk-layer-shell-dev; Depend on libglib2.0-bin (gdbus)
+    and mate-panel (>= 1.27.0).
+  * Point Maintainer, Homepage, Vcs-* and debian/upstream/metadata at the
+    fork; drop debian/watch, the upstream signing key and the obsolete
+    debian/copyright.in.
+
+ -- bobdole4prez <bobdole4prez@users.noreply.github.com>  Fri, 13 Nov 2026 13:00:00 -0500
+
+brisk-menu (0.6.2-2) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1000_fixed-sorting-with-accented-chars.patch
+    + Add 1001_fix-crashes-when-updating-apps.patch
+    + Add 1002_fix_build_order_bug.patch
+
+  [ Mike Gabriel ]
+  * debian/control:
+    + Bump Standards-Version: to 4.6.1. No changes needed.
+  * debian/watch:
+    + Use @smcv's approach for checking Github's releases page for new
+      upstream releases.
+  * debian/copyright:
+    + Update copyright attributions.
+  * debian/upstream/metadata:
+    + Add file. Comply with DEP-12.
+  * debian/patches:
+    + Add minimal patch header for patches added by Martin Wimpress.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 26 Oct 2022 22:02:54 +0200
+
+brisk-menu (0.6.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+    + Bump DH compat level to version 13.
+  * debian/watch:
+    + Obtain packed tar.xz file that includes translations and also has been
+      GPG-signed.
+  * debian/{watch,upstream/signing-key.asc}:
+    + Verify downloaded tarball with GPG.
+  * debian/patches:
+    + Drop all patches. All applied upstream.
+  * debian/copyright:
+    + Update auto-generated copyright.in file.
+    + Update copyright attributions.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Fri, 21 Aug 2020 21:10:29 +0000
+
+brisk-menu (0.6.0-2) unstable; urgency=medium
+
+  [ Mike Gabriel ]
+  * debian/control:
+    + Add Rules-Requires-Root: field and set it to no.
+    + Bump Standards-Version: to 4.5.0. No changes needed.
+  * debian/copyright:
+    + Drop LICENSE files from list of copyrighted files.
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1000_fix_crashes_on_menu_rebuild.patch. Hide menu when rebuilding menu
+      items. (LP: #1724115)
+    + Add 1001_recreate_applet_when_changing_type.patch. Re-create applet menu
+      when changing window-type. (LP: #1724262)
+    + Add 1002_fix_keyboard_navigation.patch. Allow keyboard navigation. (LP:
+      #1821315)
+
+ -- Mike Gabriel <sunweaver@debian.org>  Thu, 16 Apr 2020 09:24:29 +0200
+
+brisk-menu (0.6.0-1) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * New upstream release.
+  * debian/patches:
+    + Drop 1001_build-brisk-glue-early.patch. Applied upstream.
+    + Drop 1002_fix-build-against-old-GLib.patch. Applied upstream.
+    + Drop 1003_dash_launcher.patch. Applied upstream.
+    + Drop 1004_fix_dash_styling_for_some_light_themes.patch. Applied upstream.
+    + Drop 1005_prevent_super_key_swallows_on_compiz.patch. Applied upstream.
+    + Drop 1006_session_buttons_style_class.patch. Applied upstream.
+    + Drop 1007_prevent_key-binder_swallowing_super-mouse_events.patch. Applied
+      upstream.
+    + Drop 1008_unset_lock_masks.patch. Applied upstream.
+    + Drop 1009_matemenus_api.patch. Applied upstream.
+    + Drop 1010_make_favs_appear_first.patch. Applied upstream.
+    + Drop 1011_fix_scollbar_always_visible.patch. Applied upstream.
+
+  [ Mike Gabriel ]
+  * debian/copyright:
+    + Update copyright attributions.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sat, 10 Aug 2019 16:02:20 +0200
+
+brisk-menu (0.5.0-10) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * debian/control:
+    + Updated for MATE Desktop 1.22
+  * debian/patches:
+    + Add 1009_matemenus_api.patch. Update to new mate-menus 1.22 API.
+  * debian/watch:
+    + Update URL for new upstream.
+  * debian/copyright:
+    + Update URL for new upstream.
+  * debian/patches:
+    + Add 1010_make_favs_appear_first.patch. Ensure Favourites are always shown
+      first.
+    + Add 1011_fix_scollbar_always_visible.patch. Only show the scollbar when
+      required.
+
+  [ Mike Gabriel ]
+  * debian/{compat,control}:
+    + Use debhelper-compat notation. Bump to DH compat level version 12.
+  * debian/control:
+    + Bump Standards-Version: to 4.4.0. No changes needed.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Fri, 02 Aug 2019 18:31:11 +0200
+
+brisk-menu (0.5.0-9) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * debian/rules: Fix build/host confusion. (Closes: #913518)
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 12 Nov 2018 20:59:29 +0100
+
+brisk-menu (0.5.0-8) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1007_prevent_key-binder_swallowing_super-mouse_events.patch:
+      Fix key-binder from swallowing Super+Mouse events. (LP: #1767525)
+    + Add 1008_unset_lock_masks.patch. Unset Lock key masks when closing
+      menu. (LP: #1774290)
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 01 Oct 2018 10:05:05 +0200
+
+brisk-menu (0.5.0-7) unstable; urgency=medium
+
+  * debian/control:
+    + Update Vcs-*: fields. Package has been migrated to salsa.debian.org.
+    + Drop pkg-mate-team Alioth mailing list from Uploaders: field.
+    + Bump Standards-Version: to 4.2.0. No changes needed.
+  * debian/copyright:
+    + Make Upstream-Name: field's value more human readable.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 22 Aug 2018 10:09:01 +0200
+
+brisk-menu (0.5.0-6) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1006_session_buttons_style_class.patch. Add style class for session
+      buttons.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Thu, 05 Apr 2018 22:58:15 +0200
+
+brisk-menu (0.5.0-5) unstable; urgency=medium
+
+  [ Mike Gabriel ]
+  * debian/copyright:
+    + Use secure URI for copyright format.
+  * debian/copyright:
+    + Update copyright attributions.
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1004_fix_dash_styling_for_some_light_themes.patch. Fix dash styling
+      for some light themes.
+    + Add 1005_prevent_super_key_swallows_on_compiz.patch. Prevent Super key
+      swallows on Compiz.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sun, 11 Mar 2018 11:21:49 +0100
+
+brisk-menu (0.5.0-4) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * debian/patches:
+    + Add 1003_dash_launcher.patch. Add the dash launcher from upstream
+      git master.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sat, 20 Jan 2018 09:14:08 +0100
+
+brisk-menu (0.5.0-3) unstable; urgency=medium
+
+  * debian/patches:
+    + Add README file, explaining our patch naming scheme.
+    + Add 1001_build-brisk-glue-early.patch. Fix occasional but regular
+      build failures when this package is built parallely. (Closes:
+      #887686).
+    + Add 1002_fix-build-against-old-GLib.patch. Fix FTBFS against
+      GLib << 2.51.3. This will ease backporting this package to Debian
+      stretch.
+
+  * debian/control:
+    + B-D on meson (>= 0.40.0). Make sure features in debhelper (>= 11~) are
+      supported by the meson version we build with. This is actually a
+      workaround for a slightly broken debhelper at the moment.
+    + Add B-D: libxml2-utils.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Fri, 19 Jan 2018 17:42:15 +0100
+
+brisk-menu (0.5.0-2) unstable; urgency=medium
+
+  [ Vangelis Mouhtsis ]
+  * debian/control:
+    + Bump Standards-Version: to 4.1.3. No changes needed.
+    + Rename pretty name of our team -> Debian+Ubuntu Mate Packaging Team.
+    + Update Maintainer: field to debian-mate ML on list.debian.org.
+    + Add myself to Uploaders: field.
+    + Temporarily have pkg-mate-team ML under Uploaders:.
+
+  [ Mike Gabriel ]
+  * debian/{control,compat}:
+    + Bump to DH version level 11.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Thu, 18 Jan 2018 18:14:05 +0100
+
+brisk-menu (0.5.0-1) unstable; urgency=medium
+
+  [ Martin Wimpress ]
+  * New upstream release.
+  * debian/control:
+    + Add B-D: libnotify-dev.
+    + Update Build-Depends: to support meson.
+  * debian/rules:
+    + Migrate to Meson.
+
+  [ Mike Gabriel ]
+  * debian/control:
+    + Bump Standards-Version: to 4.1.1. No changes needed.
+  * debian/copyright:
+    + Refresh autogenerated copyright.in file.
+    + Update copyright attributions.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Thu, 16 Nov 2017 08:51:54 +0100
+
+brisk-menu (0.4.5-1) unstable; urgency=medium
+
+  [ Aron Xu ]
+  * New upstream release.
+
+  [ Martin Wimpress ]
+  * debian/copyright: Update copyright attributions.
+
+  [ Mike Gabriel ]
+  * debian/control: Add B-D: intltool.
+  * debian/rules:
+    + Drop DEB_DH_INSTALL_ARGS (--fail-missing) and use utils.mk's
+      list-missing target instead.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Tue, 01 Aug 2017 14:10:09 -0400
+
+brisk-menu (0.2.0-1) unstable; urgency=medium
+
+  * Initial release to Debian. (Closes: #851057).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 11 Jan 2017 23:28:02 +0100
