@@ -8,6 +8,18 @@ This fork adds Wayland support to Brisk Menu for MATE 1.27 and later (mate-panel
 
 Download a Debian 13 (trixie) package from the [Releases](https://github.com/bobdole4prez/brisk-menu/releases) page.
 
+> [!NOTE]
+> The release `.deb` is built against Debian 13's mate-panel (1.27/1.28). **mate-panel 1.29 changed its applet library** (`libmate-panel-applet-4.so.2` and a larger applet class), so with 1.29 or later the panel reports *"The panel encountered a problem while loading BriskMenuFactory::BriskMenu"*. Rebuild the package against your installed mate-panel; no code changes are needed:
+>
+> ```bash
+> dpkg-source -x brisk-menu_0.6.2+wayland1-1.dsc
+> cd brisk-menu-0.6.2+wayland1
+> dpkg-checkbuilddeps            # install anything listed; needs your mate-panel's libmate-panel-applet-dev
+> dpkg-buildpackage -us -uc -b
+> sudo apt install --reinstall ../mate-applet-brisk-menu_0.6.2+wayland1-1_amd64.deb
+> mate-panel --replace &
+> ```
+
 ### What's different from upstream
 
 - The applet is built **in-process** (a module mate-panel loads) instead of as a separate program. mate-panel only supports separate-program applets on X11, which is why upstream Brisk shows nothing under Wayland.
