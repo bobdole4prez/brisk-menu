@@ -2,7 +2,7 @@ brisk-menu (Wayland fork)
 =========================
 
 > [!IMPORTANT]
-> **This fork is not actively developed.** It exists to share a working Wayland build of Brisk Menu for anyone who wants it. Upstream ([getsolus/brisk-menu](https://github.com/getsolus/brisk-menu)) was archived in 2025. Issues are open so people can share problems and fixes, but there's no promise of a reply, a fix or new releases. Pull requests may not be reviewed or merged.
+> **This fork is not actively developed.** It exists to share a working Wayland build of Brisk Menu for anyone who wants it. Upstream ([getsolus/brisk-menu](https://github.com/getsolus/brisk-menu)) was archived in 2025. It's provided as-is: Issues are turned off, and there's no promise of fixes or new releases. Pull requests may not be reviewed or merged.
 
 This fork adds Wayland support to Brisk Menu for MATE 1.27 and later (mate-panel's Wayland session, e.g. mate-wayland-session with Wayfire). It runs unchanged in an X11 session too.
 
