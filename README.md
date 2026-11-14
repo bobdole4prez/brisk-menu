@@ -6,19 +6,25 @@ brisk-menu (Wayland fork)
 
 This fork adds Wayland support to Brisk Menu for MATE 1.27 and later (mate-panel's Wayland session, e.g. mate-wayland-session with Wayfire). It runs unchanged in an X11 session too.
 
-Download a Debian 13 (trixie) package from the [Releases](https://github.com/bobdole4prez/brisk-menu/releases) page.
+Download a Debian 13 (trixie) package from the [Releases](https://github.com/bobdole4prez/brisk-menu/releases) page. **Pick the one that matches your mate-panel version** (`dpkg-query -W mate-panel`):
 
-> [!NOTE]
-> The release `.deb` is built against Debian 13's mate-panel (1.27/1.28). **mate-panel 1.29 changed its applet library** (`libmate-panel-applet-4.so.2` and a larger applet class), so with 1.29 or later the panel reports *"The panel encountered a problem while loading BriskMenuFactory::BriskMenu"*. Rebuild the package against your installed mate-panel; no code changes are needed:
->
-> ```bash
-> dpkg-source -x brisk-menu_0.6.2+wayland1-1.dsc
-> cd brisk-menu-0.6.2+wayland1
-> dpkg-checkbuilddeps            # install anything listed; needs your mate-panel's libmate-panel-applet-dev
-> dpkg-buildpackage -us -uc -b
-> sudo apt install --reinstall ../mate-applet-brisk-menu_0.6.2+wayland1-1_amd64.deb
-> mate-panel --replace &
-> ```
+| Your mate-panel | Package to install |
+|---|---|
+| 1.27 or 1.28 (includes Debian 13's own 1.27.1) | `mate-applet-brisk-menu_…+mate1.28_amd64.deb` |
+| 1.29 or later | `mate-applet-brisk-menu_…+mate1.29_amd64.deb` |
+
+mate-panel 1.29 changed its applet library (`libmate-panel-applet-4.so.2` and a larger applet class), so each package works only with the mate-panel series it was built for; their dependencies stop apt from installing the wrong one. With the wrong build, the panel reports *"The panel encountered a problem while loading BriskMenuFactory::BriskMenu"*.
+
+If neither package fits your system, rebuild from the source package (`.dsc`, `.orig.tar.xz`, `.debian.tar.xz`) against your installed mate-panel; the build labels itself to match:
+
+```bash
+dpkg-source -x brisk-menu_0.6.2+wayland1-2.dsc
+cd brisk-menu-0.6.2+wayland1
+dpkg-checkbuilddeps            # install anything listed; needs your mate-panel's libmate-panel-applet-dev
+dpkg-buildpackage -us -uc -b
+sudo apt install ../mate-applet-brisk-menu_*_amd64.deb
+mate-panel --replace &
+```
 
 ### What's different from upstream
 
