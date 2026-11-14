@@ -24,7 +24,7 @@ Vcs-Git: https://github.com/bobdole4prez/brisk-menu.git
 Package: mate-applet-brisk-menu
 Architecture: any
 Depends:
- mate-panel (>= 1.27.0),
+ ${mate:Depends},
  libglib2.0-bin,
  ${shlibs:Depends},
  ${misc:Depends},
@@ -40,3 +40,7 @@ Description: Solus Project's Brisk Menu MATE Panel Applet (Wayland fork)
  This unofficial build adds Wayland support (mate-panel 1.27+ with a
  layer-shell compositor such as Wayfire) and runs the applet in-process.
  It is provided as-is and is not actively developed.
+ .
+ The package version ends in +mate1.28 for builds against mate-panel 1.27-1.28
+ and +mate1.29 for builds against mate-panel 1.29 or later; each only works
+ with the mate-panel series it was built for.

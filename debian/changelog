@@ -1,3 +1,14 @@
+brisk-menu (0.6.2+wayland1-2) unstable; urgency=medium
+
+  * Label builds by mate-panel series: mate-panel 1.29 changed the applet ABI
+    (libmate-panel-applet-4.so.2, larger MatePanelAppletClass), so a build
+    only works with the series it was built against. debian/rules now reads
+    the mate-panel version at build time, appends +mate1.28 or +mate1.29 to
+    the binary version, and sets the mate-panel dependency to
+    (>= 1.27, << 1.29) or (>= 1.29) to match.
+
+ -- bobdole4prez <bobdole4prez@users.noreply.github.com>  Sat, 14 Nov 2026 15:00:00 -0500
+
 brisk-menu (0.6.2+wayland1-1) unstable; urgency=medium
 
   * Unofficial build from https://github.com/bobdole4prez/brisk-menu, based
