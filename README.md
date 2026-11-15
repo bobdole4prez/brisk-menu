@@ -42,7 +42,7 @@ mate-panel --replace &
 
 ### Known limitations
 
-- Under Wayland, the **Lock, Log Out and Shut Down buttons do nothing**: they use the MATE screensaver and session services, which aren't available in the Wayland session (mate-panel's own menu has the same problem, [mate-panel#1432](https://github.com/mate-desktop/mate-panel/issues/1432)).
+- Under Wayland, **Log Out and Shut Down need [mate-session-manager 1.29.0](https://github.com/mate-desktop/mate-session-manager/releases/tag/v1.29.0) or later**, with the MATE Wayland session it provides chosen at login. With older versions they do nothing, because the MATE session service isn't running in the Wayland session (mate-panel's own menu has the same problem, [mate-panel#1432](https://github.com/mate-desktop/mate-panel/issues/1432)). **Lock still does nothing under Wayland**: it uses the MATE screensaver, which only works on X11.
 - Menu placement assumes the panel starts at the edge of the monitor (true for normal full-length panels).
 - Because the applet runs inside mate-panel, a crash in Brisk takes the panel down with it.
 - Tested on Debian 13 with MATE 1.28 under Wayfire, and in an X11 session.
